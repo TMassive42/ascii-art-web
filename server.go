@@ -1,5 +1,19 @@
 package main
 
-func main(){
+import (
+    "fmt"
+    "log"
+    "net/http"
+)
 
+func handler(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hello, World!")
+}
+
+func main() {
+	fmt.Println("Starting server at port 8080")
+    err := http.ListenAndServe(":8080", http.HandlerFunc(handler))
+    if err != nil {
+        log.Fatal("Error starting server:", err)
+    }
 }
