@@ -1,14 +1,13 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASCII Art Generator</title>
+    <title>{{.Title}}</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>ASCII Art Generator</h1>
+    <h1>{{.Title}}</h1>
     <form action="/ascii-art" method="post">
         <p>Enter text below</p>
         <textarea name="input" id="input" rows="10" cols="50"></textarea><br>
