@@ -1,15 +1,17 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASCII Art Generator</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <h1>ASCII Art Generator</h1>
     <form action="/ascii-art" method="post">
-        <label for="text">Text:</label>
-        <input type="text" id="text" name="text" required>
+        <p>Enter text below</p>
+        <textarea name="input" id="input" rows="10" cols="50"></textarea><br>
         <br>
         <label for="banner">Select Banner:</label>
         <select id="banner" name="banner">
@@ -18,12 +20,10 @@
             <option value="thinkertoy">Thinkertoy</option>
         </select>
         <br>
+        <br>
         <input type="submit" value="Generate ASCII Art">
     </form>
-</body>
-
-<body>
-    <div>
+   <div>
        <pre>
         _    _          _   _          
         | |  | |        | | | |         
@@ -33,6 +33,6 @@
         |_|  |_|  \___| |_| |_|  \___/  
                                         
        </pre>  
-    </div>  
-</body>
+    </div>   
+</body>   
 </html>

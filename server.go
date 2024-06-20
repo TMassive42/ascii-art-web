@@ -11,8 +11,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	fmt.Println("Starting server at port 8080")
-    err := http.ListenAndServe(":8080", http.HandlerFunc(handler))
+	log.Println("Starting server at port 8080")
+    http.HandleFunc("/helloworld",handler)
+    err := http.ListenAndServe(":8080", nil)
     if err != nil {
         log.Fatal("Error starting server:", err)
     }
