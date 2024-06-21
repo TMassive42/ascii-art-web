@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Title}}</title>
+    <title>ASCII Art Generator</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>{{.Title}}</h1>
-    <form action="/ascii-art" method="post">
+    <h1>ASCII Art Generator</h1>
+    <form action="/" method="post">
         <p>Enter text below</p>
         <textarea name="input" id="input" rows="10" cols="50"></textarea><br>
         <br>
@@ -22,16 +22,8 @@
         <br>
         <input type="submit" value="Generate ASCII Art">
     </form>
-   <div>
-       <pre>
-        _    _          _   _          
-        | |  | |        | | | |         
-        | |__| |   ___  | | | |   ___   
-        |  __  |  / _ \ | | | |  / _ \  
-        | |  | | |  __/ | | | | | (_) | 
-        |_|  |_|  \___| |_| |_|  \___/  
-                                        
-       </pre>  
+    <div>
+        <pre>{{.Art}}</pre>
     </div>   
 </body>   
 </html>
