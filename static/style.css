@@ -2,8 +2,24 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #000000;
+    text-align: center;
 }
 h1 {
-    color: #333;
+    color: #ffffff;
+    text-align: center;
+}
+pre {
+    color: #ffff00;
+    text-align: center;
+}
+p {
+    color: #ffffff
+}
+label {
+    color: #ffffff
+}
+textarea {
+    border: 1px solid red;
+    border-radius: 10px;
 }
