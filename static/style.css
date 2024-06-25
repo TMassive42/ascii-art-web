@@ -4,14 +4,19 @@ body {
     font-family: Arial, sans-serif;
     background-color: #000000;
     text-align: center;
+    border: 1px solid white;
+    border-radius: 5px;
 }
 h1 {
     color: #ffffff;
     text-align: center;
 }
 pre {
-    color: #ffff00;
+    color: #ff0000;
     text-align: center;
+    background-color: #87cefa;
+    min-height: 100px;
+    padding: 10px;
 }
 p {
     color: #ffffff
