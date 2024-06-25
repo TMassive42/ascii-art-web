@@ -77,6 +77,10 @@ func printer(art *strings.Builder, s string, b [][]string) {
 	for i := 1; i < 9; i++ {
 		for _, char := range s {
 			toPrint := char - 32
+			if toPrint < 0 || int(toPrint) >= len(b) {
+				art.WriteString("        ") // 8 spaces for unknown characters
+				continue
+			}
 			art.WriteString(b[toPrint][i])
 		}
 		art.WriteString("\n")
