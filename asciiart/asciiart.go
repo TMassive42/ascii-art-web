@@ -11,7 +11,7 @@ func GenerateASCIIArt(input string, banner string) (string, error) {
 	bannerFile := fmt.Sprintf("%s.txt", banner)
 	file, err := os.Open(bannerFile)
 	if err != nil {
-		return "", fmt.Errorf("error opening banner file: %v", err)
+		return "", ErrNotFound
 	}
 	defer file.Close()
 
@@ -22,7 +22,7 @@ func GenerateASCIIArt(input string, banner string) (string, error) {
 	}
 
 	if len(lines) != 855 {
-		return "", fmt.Errorf("the banner file %s has been modified", file.Name())
+		return "", ErrBadRequest
 	}
 
 	characters := [][]string{}
