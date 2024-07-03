@@ -22,6 +22,10 @@
         <br>
         <input type="submit" value="Generate ASCII Art">
     </form>
+    {{if .Error}}
+<p style="color:red">{{.Error}}</p>
+{{end}}
+
     <div>
         <pre>{{.Art}}</pre>
     </div>   

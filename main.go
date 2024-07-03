@@ -1,14 +1,15 @@
 package main
 
 import (
+	"Server/asciiart" // Import the asciiart package
 	"html/template"
 	"log"
 	"net/http"
-	"Server/asciiart" // Import the asciiart package
 )
 
 type PageData struct {
-	Art string
+	Art   string
+	Error string
 }
 
 var tmpl *template.Template
@@ -40,8 +41,8 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 		// If not a POST request, just render the form
 		data := &PageData{}
 		if err := tmpl.Execute(w, data); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
 			log.Printf("Error executing template: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		} else {
 			log.Println("Template executed successfully")
 		}
@@ -51,19 +52,44 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	input := r.FormValue("input")
 	banner := r.FormValue("banner")
 
-	art, err := asciiart.GenerateASCIIArt(input, banner)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if input == "" || banner == "" {
+		// If input or banner is missing, return a bad request
+		w.WriteHeader(http.StatusBadRequest)
+		data := &PageData{
+			Error: "Both text input and banner selection are required.",
+		}
+		log.Println("Error: Missing input or banner selection")
+		if err := tmpl.Execute(w, data); err != nil {
+			log.Printf("Error executing template: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
 		return
 	}
 
-	data := &PageData{
-		Art: art,
+	art, err := asciiart.GenerateASCIIArt(input, banner)
+	data := &PageData{}
+	if err != nil {
+		switch err {
+		case asciiart.ErrNotFound:
+			w.WriteHeader(http.StatusNotFound)
+			data.Error = "The specified banner was not found."
+			log.Printf("Error: %v", err)
+		case asciiart.ErrBadRequest:
+			w.WriteHeader(http.StatusBadRequest)
+			data.Error = "The request was incorrect. Please check your input."
+			log.Printf("Error: %v", err)
+		default:
+			w.WriteHeader(http.StatusInternalServerError)
+			data.Error = "An internal error occurred. Please try again later."
+			log.Printf("Internal error: %v", err)
+		}
+	} else {
+		data.Art = art
 	}
 
 	if err := tmpl.Execute(w, data); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 		log.Printf("Error executing template: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	} else {
 		log.Println("Template executed successfully")
 	}
