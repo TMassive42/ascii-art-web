@@ -34,49 +34,22 @@ func GenerateASCIIArt(input string, banner string) (string, error) {
 		characters = append(characters, lines[i:end])
 	}
 
-	input = strings.Replace(input, "\\n", "\n", -1)
-	input = strings.Replace(input, "\\t", "    ", -1)
-
 	var art strings.Builder
-	handleLn(&art, input, characters)
+
+	str := strings.Split(input, "\n")
+	for _, char := range str {
+
+		printer(&art, char, characters)
+	}
 
 	return art.String(), nil
-}
-
-func handleLn(art *strings.Builder, s string, b [][]string) {
-	if s == "" {
-		return
-	}
-
-	isAllNewline := true
-	for _, char := range s {
-		if char != '\n' {
-			isAllNewline = false
-			break
-		}
-	}
-	if isAllNewline {
-		count := strings.Count(s, "\n")
-		for i := 0; i < count; i++ {
-			art.WriteString("\n")
-		}
-		return
-	}
-
-	str := strings.Split(s, "\n")
-	for _, char := range str {
-		if char == "" {
-			art.WriteString("\n")
-			continue
-		}
-		printer(art, char, b)
-	}
 }
 
 func printer(art *strings.Builder, s string, b [][]string) {
 	for i := 1; i < 9; i++ {
 		for _, char := range s {
 			toPrint := char - 32
+			// handleLn(&art, input, characters)
 			if toPrint < 0 || int(toPrint) >= len(b) {
 				art.WriteString("        ") // 8 spaces for unknown characters
 				continue

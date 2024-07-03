@@ -1,7 +1,8 @@
 package main
 
 import (
-	"Server/asciiart" // Import the asciiart package
+	"Server/asciiart"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -36,61 +37,52 @@ func main() {
 	}
 }
 
-func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		// If not a POST request, just render the form
-		data := &PageData{}
-		if err := tmpl.Execute(w, data); err != nil {
-			log.Printf("Error executing template: %v", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		} else {
-			log.Println("Template executed successfully")
-		}
-		return
-	}
-
-	input := r.FormValue("input")
-	banner := r.FormValue("banner")
-
-	if input == "" || banner == "" {
-		// If input or banner is missing, return a bad request
-		w.WriteHeader(http.StatusBadRequest)
-		data := &PageData{
-			Error: "Both text input and banner selection are required.",
-		}
-		log.Println("Error: Missing input or banner selection")
-		if err := tmpl.Execute(w, data); err != nil {
-			log.Printf("Error executing template: %v", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		}
-		return
-	}
-
-	art, err := asciiart.GenerateASCIIArt(input, banner)
-	data := &PageData{}
-	if err != nil {
-		switch err {
-		case asciiart.ErrNotFound:
-			w.WriteHeader(http.StatusNotFound)
-			data.Error = "The specified banner was not found."
-			log.Printf("Error: %v", err)
-		case asciiart.ErrBadRequest:
-			w.WriteHeader(http.StatusBadRequest)
-			data.Error = "The request was incorrect. Please check your input."
-			log.Printf("Error: %v", err)
-		default:
-			w.WriteHeader(http.StatusInternalServerError)
-			data.Error = "An internal error occurred. Please try again later."
-			log.Printf("Internal error: %v", err)
-		}
-	} else {
-		data.Art = art
-	}
-
+func renderTemplate(w http.ResponseWriter, data *PageData) {
 	if err := tmpl.Execute(w, data); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	} else {
 		log.Println("Template executed successfully")
 	}
+}
+
+func handleError(w http.ResponseWriter, data *PageData, statusCode int, errMsg string, logMsg string) {
+	w.WriteHeader(statusCode)
+	data.Error = errMsg
+	log.Println(logMsg)
+	renderTemplate(w, data)
+}
+
+func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		// If not a POST request, just render the form
+		data := &PageData{}
+		renderTemplate(w, data)
+		return
+	}
+
+	input := r.FormValue("input")
+	banner := r.FormValue("banner")
+
+	data := &PageData{}
+	if input == "" || banner == "" {
+		handleError(w, data, http.StatusBadRequest, "Both text input and banner selection are required.", "Error: Missing input or banner selection")
+		return
+	}
+
+	art, err := asciiart.GenerateASCIIArt(input, banner)
+	if err != nil {
+		switch err {
+		case asciiart.ErrNotFound:
+			handleError(w, data, http.StatusNotFound, "The specified banner was not found.", fmt.Sprintf("Error: %v", err))
+		case asciiart.ErrBadRequest:
+			handleError(w, data, http.StatusBadRequest, "The request was incorrect. Please check your input.", fmt.Sprintf("Error: %v", err))
+		default:
+			handleError(w, data, http.StatusInternalServerError, "An internal error occurred. Please try again later.", fmt.Sprintf("Internal error: %v", err))
+		}
+		return
+	}
+
+	data.Art = art
+	renderTemplate(w, data)
 }
