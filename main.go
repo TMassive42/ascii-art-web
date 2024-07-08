@@ -20,7 +20,7 @@ func main() {
 	// Parse the template file
 	tmpl, err = template.ParseFiles("templates/index.html")
 	if err != nil {
-		log.Fatalf("Error parsing template: %v", err)
+		log.Printf("Error parsing template: %v", err)
 	}
 
 	// Define the handler function for the root path
@@ -38,6 +38,11 @@ func main() {
 }
 
 func renderTemplate(w http.ResponseWriter, data *PageData) {
+	if tmpl == nil {
+		log.Println("Template file not found")
+		http.Error(w, "Template file not found", http.StatusNotFound)
+		return
+	}
 	if err := tmpl.Execute(w, data); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -47,11 +52,14 @@ func renderTemplate(w http.ResponseWriter, data *PageData) {
 }
 
 func handleError(w http.ResponseWriter, data *PageData, statusCode int, errMsg string, logMsg string) {
-	w.WriteHeader(statusCode)
 	data.Error = errMsg
 	log.Println(logMsg)
+	// Set the status code here
+	w.WriteHeader(statusCode)
+	// Render the template after setting the status code
 	renderTemplate(w, data)
 }
+
 
 func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
