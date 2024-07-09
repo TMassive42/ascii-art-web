@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 	"asciiartserver/asciiart"
 )
 
@@ -25,7 +26,22 @@ func main() {
 	}
 
 	// Define the handler function for the root path
-	http.HandleFunc("/", asciiArtHandler)
+	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
+		// Handle valid paths
+		if r.URL.Path == "/" {
+			asciiArtHandler(w, r)
+			return
+		}
+	
+		// Handle 404 for unregistered paths
+		if !strings.HasPrefix(r.URL.Path, "/static/") {
+			http.NotFound(w, r)
+			return
+		}
+	
+		// Serve static files (handled by FileServer)
+		http.DefaultServeMux.ServeHTTP(w, r)
+	})
 
 	// Serve other static files (e.g., CSS, JS) using FileServer
 	staticDir := http.Dir("static")
@@ -70,7 +86,7 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	input := r.FormValue("input")
-	banner := r.FormValue("banner")
+	banner := "asciiart/banners/" + r.FormValue("banner")
 
 	data := &PageData{}
 	if input == "" || banner == "" {
