@@ -6,19 +6,19 @@ import (
 	"log"
 	"net/http"
 	"strings"
-
-	"Server/asciiart"
+	"asciiartserver/asciiart"
 )
 
+var tmpl *template.Template
 type PageData struct {
 	Art   string
 	Error string
 }
 
-var tmpl *template.Template
-
 func main() {
+
 	var err error
+
 	// Parse the template file
 	tmpl, err = template.ParseFiles("templates/index.html")
 	if err != nil {
@@ -110,3 +110,4 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	data.Art = art
 	renderTemplate(w, data)
 }
+
