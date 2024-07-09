@@ -8,13 +8,6 @@ import (
 	server "asciiartserver/server"
 )
 
-// var Tmpl *template.Template
-
-// type PageData struct {
-// 	Art   string
-// 	Error string
-// }
-
 func main() {
 
 	var err error
