@@ -1,11 +1,11 @@
 package server
 
 import (
+	"asciiartserver/asciiart"
 	"fmt"
 	"html/template"
-	"net/http"
 	"log"
-	"asciiartserver/asciiart"
+	"net/http"
 )
 
 var Tmpl *template.Template
@@ -71,4 +71,3 @@ func handleError(w http.ResponseWriter, data *PageData, statusCode int, errMsg s
 	// Render the template after setting the status code
 	renderTemplate(w, data)
 }
-

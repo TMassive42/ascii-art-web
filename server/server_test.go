@@ -1,11 +1,11 @@
 package server
 
 import (
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-	"html/template"
 )
 
 func TestRenderTemplate(t *testing.T) {

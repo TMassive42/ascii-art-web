@@ -1,11 +1,11 @@
 package main
 
 import (
+	server "asciiartserver/server"
 	"html/template"
 	"log"
 	"net/http"
 	"strings"
-	server "asciiartserver/server"
 )
 
 func main() {
@@ -19,19 +19,19 @@ func main() {
 	}
 
 	// Define the handler function for the root path
-	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Handle valid paths
 		if r.URL.Path == "/" {
 			server.AsciiArtHandler(w, r)
 			return
 		}
-	
+
 		// Handle 404 for unregistered paths
 		if !strings.HasPrefix(r.URL.Path, "/static/") {
 			http.NotFound(w, r)
 			return
 		}
-	
+
 		// Serve static files (handled by FileServer)
 		http.DefaultServeMux.ServeHTTP(w, r)
 	})
