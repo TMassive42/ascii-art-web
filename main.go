@@ -1,23 +1,13 @@
 package main
 
 import (
-	server "asciiartserver/server"
-	"html/template"
 	"log"
 	"net/http"
 	"strings"
+	server "asciiartserver/server"
 )
 
 func main() {
-
-	var err error
-
-	// Parse the template file
-	server.Tmpl, err = template.ParseFiles("templates/index.html")
-	if err != nil {
-		log.Printf("Error parsing template: %v", err)
-	}
-
 	// Define the handler function for the root path
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Handle valid paths
@@ -28,12 +18,15 @@ func main() {
 
 		// Handle 404 for unregistered paths
 		if !strings.HasPrefix(r.URL.Path, "/static/") {
-			http.NotFound(w, r)
+			
+			data := &server.PageData{
+				Error: "Page Not Found",
+			}
+			w.WriteHeader(http.StatusNotFound)
+			server.RenderTemplate(w, "templates/404.html", data)
+			
 			return
 		}
-
-		// Serve static files (handled by FileServer)
-		http.DefaultServeMux.ServeHTTP(w, r)
 	})
 
 	// Serve other static files (e.g., CSS, JS) using FileServer
@@ -46,3 +39,4 @@ func main() {
 		log.Fatalf("Error starting server: %v", err)
 	}
 }
+

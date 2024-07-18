@@ -1,11 +1,11 @@
 package server
 
 import (
-	"asciiartserver/asciiart"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"asciiartserver/asciiart" // Adjust the import path based on your project structure
 )
 
 var Tmpl *template.Template
@@ -15,11 +15,32 @@ type PageData struct {
 	Error string
 }
 
+func RenderTemplate(w http.ResponseWriter, templateFile string, data *PageData) {
+	var err error
+
+	// Parse the template file
+	Tmpl, err = template.ParseFiles(templateFile)
+	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+	}
+	if Tmpl == nil {
+		log.Println("Template file not found")
+		http.Error(w, "Template file not found", http.StatusNotFound)
+		return
+	}
+	if err := Tmpl.Execute(w, data); err != nil {
+		log.Printf("Error executing template: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	} else {
+		log.Println("Template executed successfully")
+	}
+}
+
 func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		// If not a POST request, just render the form
 		data := &PageData{}
-		renderTemplate(w, data)
+		RenderTemplate(w, "templates/index.html", data)
 		return
 	}
 
@@ -46,21 +67,7 @@ func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data.Art = art
-	renderTemplate(w, data)
-}
-
-func renderTemplate(w http.ResponseWriter, data *PageData) {
-	if Tmpl == nil {
-		log.Println("Template file not found")
-		http.Error(w, "Template file not found", http.StatusNotFound)
-		return
-	}
-	if err := Tmpl.Execute(w, data); err != nil {
-		log.Printf("Error executing template: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	} else {
-		log.Println("Template executed successfully")
-	}
+	RenderTemplate(w, "templates/index.html", data)
 }
 
 func handleError(w http.ResponseWriter, data *PageData, statusCode int, errMsg string, logMsg string) {
@@ -68,6 +75,10 @@ func handleError(w http.ResponseWriter, data *PageData, statusCode int, errMsg s
 	log.Println(logMsg)
 	// Set the status code here
 	w.WriteHeader(statusCode)
-	// Render the template after setting the status code
-	renderTemplate(w, data)
+	// Render the appropriate template after setting the status code
+	if statusCode == http.StatusNotFound {
+		RenderTemplate(w, "templates/404.html", data)
+	} else {
+		RenderTemplate(w, "templates/index.html", data)
+	}
 }
