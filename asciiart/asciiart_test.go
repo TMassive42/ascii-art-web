@@ -67,7 +67,7 @@ func TestGenerateASCIIArt(t *testing.T) {
 				return
 			}
 			gotTrimmed := strings.TrimSpace(got)
-			if gotTrimmed != strings.TrimSpace(tt.want) {
+			if gotTrimmed != strings.TrimSpace(tt.want ){
 				t.Errorf("GenerateASCIIArt() = %v, want %v", got, tt.want)
 			}
 		})
