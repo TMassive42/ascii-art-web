@@ -1,4 +1,4 @@
-# Ascii-art-web
+# ascii-art-web-stylize
 Ascii-art-web entails creating and running a server, in which it will be possible to use a web GUI (Graphical User Interface) version of ascii-art.
 
 ## Features

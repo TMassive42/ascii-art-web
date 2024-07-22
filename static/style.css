@@ -6,17 +6,22 @@ body {
     text-align: center;
     /*border: 1px solid greenyellow;*/
     border-radius: 5px;
+    width: auto;
 }
 h1 {
     color: #ffffff;
     text-align: center;
 }
 pre {
+    margin: 20px auto;
     color: #ff0000;
     text-align: center;
-    background-color: #87cefa;
-    min-height: 100px;
+    background-color: darkgray;
+    min-height: 50px;
     padding: 10px;
+    width: 90%;
+    Overflow: scroll;
+    border-radius: 5px;
 }
 p {
     color: #ffffff
@@ -25,6 +30,27 @@ label {
     color: #ffffff
 }
 textarea {
-    border: 1px solid red;
+    border: 1px solid #1452d0;
     border-radius: 10px;
+    background-color: darkgray;
+}
+
+input {
+    color: #0e1070;
+    border-radius: 4px
+}
+
+select {
+    color: #0e1070;
+  margin: 18px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+    
+}
+input:hover {
+	background-color: #1452d0;
+}
+select:hover {
+	background-color: #1452d0;
 }

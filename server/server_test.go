@@ -1,11 +1,11 @@
 package server
 
 import (
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-	"html/template"
 )
 
 func TestRenderTemplate(t *testing.T) {
@@ -22,7 +22,7 @@ func TestRenderTemplate(t *testing.T) {
 
 	for _, tt := range tests {
 		rr := httptest.NewRecorder()
-		RenderTemplate(rr, tt.data)
+		renderTemplate(rr, tt.data)
 
 		if status := rr.Code; status != tt.statusCode {
 			t.Errorf("renderTemplate returned wrong status code: got %v want %v", status, tt.statusCode)
