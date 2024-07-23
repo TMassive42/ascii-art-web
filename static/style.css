@@ -4,7 +4,6 @@ body {
     font-family: Arial, sans-serif;
     background-color: #000000;
     text-align: center;
-    /*border: 1px solid greenyellow;*/
     border-radius: 5px;
     width: auto;
 }
@@ -14,7 +13,7 @@ h1 {
 }
 pre {
     margin: 20px auto;
-    color: #ff0000;
+    color: #000000;
     text-align: center;
     background-color: darkgray;
     min-height: 50px;
@@ -22,6 +21,7 @@ pre {
     width: 90%;
     Overflow: scroll;
     border-radius: 5px;
+   
 }
 p {
     color: #ffffff
@@ -50,7 +50,9 @@ select {
 }
 input:hover {
 	background-color: #1452d0;
+    color: #ffffff;
 }
 select:hover {
 	background-color: #1452d0;
+    color: #ffffff;
 }
